@@ -1,4 +1,4 @@
 common
 ======
 
-Common front end elements used in multiple projects.
+Shared custom libraries used across projects.

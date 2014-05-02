@@ -1,19 +1,11 @@
 {
   "name": "common-bacon-form",
   "version": "0.1.0",
-  "homepage": "https://github.com/JaakkoL/common-bacon-form",
+  "homepage": "https://github.com/meedoc/common",
   "authors": [
     "JaakkoL <jaakko.o.laurila@gmail.com>"
   ],
-  "description": "Wrapper library for handling forms with bacon.js.",
+  "description": "Shared custom libraries used across projects.",
   "main": "dist/common-bacon-form.js",
-  "license": "MIT",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ]
+  "private": true
 }
