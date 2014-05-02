@@ -216,7 +216,7 @@
 
 
   if (typeof define === 'function' && define.amd) {
-    define(['bacon.jquery', '_'], init)
+    define(['bacon.jquery', 'lodash'], init)
   } else {
     init(Bacon.$, _)
   }
