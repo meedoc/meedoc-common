@@ -174,12 +174,16 @@
       },
 
       keyUpStreams : function() {
+        if (_.size(this.formFields) === 0) return Bacon.never()
+
         var fieldsWithKeys = _.filter(this.formFields, function(f) { return typeof f.keys !== 'undefined' })
         var keyUps = _.map(fieldsWithKeys, function(f) { return f.keys })
         return _.reduce(keyUps, function(f1, f2) { return f1.merge(f2) })
       },
 
       changes : function() {
+        if (_.size(this.formFields) === 0) return Bacon.never()
+          
         var keyUps = _.map(this.formFields, function(f) { return f.changes })
         return _.reduce(keyUps, function(f1, f2) { return f1.merge(f2) })
       },
