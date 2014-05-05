@@ -4,9 +4,9 @@
 
   init = function(bjq, _) {
 
-    function isInvalid(field, validityFunc) { return field.map(function(value) { return !validityFunc(value) })}
+    function isInvalid(changes, validityFunc, field) { return changes.map(function(value) { return !validityFunc(value, field) })}
     function hasErrors(allErrors) { return _.reduce(allErrors, function(errors1, errors2) { return errors1 || errors2; }) }  
-    function getValidators(validators, changes) { return _.map(validators, function(f) { return isInvalid(changes, f) }) }
+    function getValidators(validators, changes, field) { return _.map(validators, function(f) { return isInvalid(changes, f, field) }) }
     function displayFieldError(field, showStatusClasses, err) {
       if (showStatusClasses === false) return
       field.toggleClass('error', err)
@@ -74,7 +74,7 @@
         var fieldBlurStream = field.asEventStream('blur')
         var fieldBlur = fieldBlurStream.map(bjqField)
         var changes = fieldKeys.merge(fieldBlur)      
-        var errors = Bacon.combineAsArray(getValidators(validators, changes)).map(hasErrors)
+        var errors = Bacon.combineAsArray(getValidators(validators, changes, field)).map(hasErrors)
         
         var isBlurredOnce = Bacon.constant(false).or(fieldBlurStream.map(true))
 
@@ -114,7 +114,7 @@
         var bjqField = bjq.selectValue(field, defaultValue)      
         var intial = bjqField.toEventStream()
         var changes = intial.merge(bjqField.changes())
-        var errors = Bacon.combineAsArray(getValidators(validators, changes)).map(hasErrors)
+        var errors = Bacon.combineAsArray(getValidators(validators, changes, field)).map(hasErrors)
         var isBlurredOnce = Bacon.constant(false).or(bjqField.changes().map(true))
 
         errors.takeWhile(isBlurredOnce).onValue(function(err) {
@@ -138,7 +138,7 @@
         var bjqField = bjq.checkBoxValue(field)
         var intial = bjqField.toEventStream()
         var changes = intial.merge(bjqField.changes())
-        var errors = Bacon.combineAsArray(getValidators(validators, changes)).map(hasErrors)
+        var errors = Bacon.combineAsArray(getValidators(validators, changes, field)).map(hasErrors)
         var isBlurredOnce = Bacon.constant(false).or(bjqField.changes().map(true))  
         
         errors.takeWhile(isBlurredOnce).onValue(function(err) {
