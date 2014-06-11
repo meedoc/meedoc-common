@@ -76,7 +76,7 @@
         }
       },
 
-      addTextField : function(fieldName, defaultValue, validators, showStatusClasses) {
+      addTextField : function(fieldName, defaultValue, validators, showStatusClasses, showErrorsInstantly) {
         defaultValue = (typeof defaultValue === 'undefined') ? '' : defaultValue
 
         var field = this.formElement.find('input[name="' + fieldName + '"]')
@@ -86,10 +86,10 @@
         var fieldBlur = fieldBlurStream.map(bjqField)
         var changes = fieldKeys.merge(fieldBlur)      
         var errors = Bacon.combineAsArray(getValidators(validators, changes, field)).map(hasErrors)
-        
         var isBlurredOnce = Bacon.constant(false).or(fieldBlurStream.map(true))
+        var shownErrors = showErrorsInstantly ? errors.skip(1) : errors.takeWhile(isBlurredOnce)
 
-        errors.takeWhile(isBlurredOnce).onValue(function(err) {
+        shownErrors.onValue(function(err) {
           displayFieldError(field, showStatusClasses, err)
         })
 
@@ -101,7 +101,8 @@
           keys: field.asEventStream('keyup'),
           changes: bjqField.changes(),
           validators: validators,
-          errors: errors
+          errors: errors,
+          shownErrors: shownErrors
         }
 
         return this.formFields[fieldName]
@@ -127,8 +128,9 @@
         var changes = intial.merge(bjqField.changes())
         var errors = Bacon.combineAsArray(getValidators(validators, changes, field)).map(hasErrors)
         var isBlurredOnce = Bacon.constant(false).or(bjqField.changes().map(true))
+        var shownErrors = errors.takeWhile(isBlurredOnce)
 
-        errors.takeWhile(isBlurredOnce).onValue(function(err) {
+        shownErrors.onValue(function(err) {
           displayFieldError(field, showStatusClasses, err)
         })
 
@@ -137,7 +139,8 @@
           value: bjqField,
           changes: bjqField.changes(),
           validators: validators,
-          errors: errors
+          errors: errors,
+          shownErrors: shownErrors
         }
 
         return this.formFields[fieldName]
@@ -151,8 +154,9 @@
         var changes = intial.merge(bjqField.changes())
         var errors = Bacon.combineAsArray(getValidators(validators, changes, field)).map(hasErrors)
         var isBlurredOnce = Bacon.constant(false).or(bjqField.changes().map(true))  
+        var shownErrors = errors.takeWhile(isBlurredOnce)
         
-        errors.takeWhile(isBlurredOnce).onValue(function(err) {
+        shownErrors.onValue(function(err) {
           displayFieldError(field, showStatusClasses, err)
         })
 
@@ -161,7 +165,8 @@
           value: bjqField,
           changes: bjqField.changes(),
           validators: validators,
-          errors: errors
+          errors: errors,
+          shownErrors: shownErrors
         }
 
         return this.formFields[fieldName]
@@ -202,6 +207,16 @@
       hasErrors : function() {
         var errors = _.map(this.formFields, function(f) { return f.errors })
         return Bacon.combineAsArray(errors).map(hasErrors)
+      },
+
+      shownErrors: function() {
+        var shownErrors = _.map(this.formFields, function(f) { 
+          return f.shownErrors.toEventStream().map(function(err){
+            return {error: err, field: f.field}
+          })
+        })
+
+        return _.reduce(shownErrors, function(f1, f2) { return f1.merge(f2) })
       },
 
       util : {
