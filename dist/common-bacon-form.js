@@ -4,7 +4,18 @@
 
   init = function(bjq, _) {
 
-    function isInvalid(changes, validityFunc, field) { return changes.map(function(value) { return !validityFunc(value, field) })}
+    function isInvalid(changes, validityFunc, field) { 
+      return changes.flatMap(function(value) { 
+        return invertValidationResult(validityFunc(value, field))
+      })
+
+      var isObservable = function(value) {return _.isFunction(value.onValue)}
+      var invertValidationResult = function(result) {
+        if (isObservable(result)) { return result.map(function(v) { return !v }) }
+        else { return !result }
+      }
+    }
+
     function hasErrors(allErrors) { return _.reduce(allErrors, function(errors1, errors2) { return errors1 || errors2; }) }  
     function getValidators(validators, changes, field) { return _.map(validators, function(f) { return isInvalid(changes, f, field) }) }
     function displayFieldError(field, showStatusClasses, err) {
