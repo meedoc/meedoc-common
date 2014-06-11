@@ -9,8 +9,8 @@
         return invertValidationResult(validityFunc(value, field))
       })
 
-      var isObservable = function(value) {return _.isFunction(value.onValue)}
-      var invertValidationResult = function(result) {
+      function isObservable(value) {return _.isFunction(value.onValue)}
+      function invertValidationResult(result) {
         if (isObservable(result)) { return result.map(function(v) { return !v }) }
         else { return !result }
       }
