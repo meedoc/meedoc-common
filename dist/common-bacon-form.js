@@ -108,6 +108,38 @@
         return this.formFields[fieldName]
       },
 
+      addTextArea : function(fieldName, defaultValue, validators, showStatusClasses, showErrorsInstantly) {
+        defaultValue = (typeof defaultValue === 'undefined') ? '' : defaultValue
+
+        var field = this.formElement.find('textarea[name="' + fieldName + '"]')
+
+        var bjqField = bjq.textFieldValue(field, defaultValue)
+        var fieldKeys = bjqField.toEventStream()
+        var fieldBlurStream = field.asEventStream('blur')
+        var fieldBlur = fieldBlurStream.map(bjqField)
+        var changes = fieldKeys.merge(fieldBlur)      
+        var errors = Bacon.combineAsArray(getValidators(validators, changes, field)).map(hasErrors)
+        var isBlurredOnce = Bacon.constant(false).or(fieldBlurStream.map(true))
+        var shownErrors = showErrorsInstantly ? errors.skip(1) : errors.takeWhile(isBlurredOnce)
+
+        shownErrors.onValue(function(err) {
+          displayFieldError(field, showStatusClasses, err)
+        })
+
+        bjqField.map(this.validators.NOT_EMPTY).assign(field, 'toggleClass', 'hasContent')
+
+        this.formFields[fieldName] = {
+          field: field,
+          value: bjqField,
+          changes: bjqField.changes(),
+          validators: validators,
+          errors: errors,
+          shownErrors: shownErrors
+        }
+
+        return this.formFields[fieldName]
+      },
+
       addNumberField : function(fieldName, defaultValue, validators, showStatusClasses) {
         var field = this.formElement.find('input[name="' + fieldName + '"]')
         field.on('keydown', function(e) {
