@@ -181,7 +181,7 @@
       addCheckboxField : function(fieldName, defaultValue, validators, showStatusClasses) {
         defaultValue = (typeof defaultValue === 'undefined') ? false : defaultValue
         var field = this.formElement.find('input[name="' + fieldName + '"]')
-        var bjqField = bjq.checkBoxValue(field)
+        var bjqField = bjq.checkBoxValue(field, defaultValue)
         var intial = bjqField.toEventStream()
         var changes = intial.merge(bjqField.changes())
         var errors = Bacon.combineAsArray(getValidators(validators, changes, field)).map(hasErrors)
