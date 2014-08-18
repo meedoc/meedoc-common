@@ -131,6 +131,7 @@
         this.formFields[fieldName] = {
           field: field,
           value: bjqField,
+          keys: field.asEventStream('keyup'),
           changes: bjqField.changes(),
           validators: validators,
           errors: errors,
