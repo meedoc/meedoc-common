@@ -205,6 +205,32 @@
         return this.formFields[fieldName]
       },
 
+      addRadioField : function(fieldName, defaultValue, validators, showStatusClasses) {
+        defaultValue = (typeof defaultValue === 'undefined') ? false : defaultValue
+        var fields = this.formElement.find('input[name="' + fieldName + '"]')
+        var bjqField = bjq.radioGroupValue(fields, defaultValue)
+        var intial = bjqField.toEventStream()
+        var changes = intial.merge(bjqField.changes())
+        var errors = Bacon.combineAsArray(getValidators(validators, changes, fields)).map(hasErrors)
+        var isBlurredOnce = Bacon.constant(false).or(bjqField.changes().map(true))
+        var shownErrors = errors.takeWhile(isBlurredOnce)
+
+        shownErrors.onValue(function(err) {
+          displayFieldError(fields, showStatusClasses, err)
+        })
+
+        this.formFields[fieldName] = {
+          fields: fields,
+          value: bjqField,
+          changes: bjqField.changes(),
+          validators: validators,
+          errors: errors,
+          shownErrors: shownErrors
+        }
+
+        return this.formFields[fieldName]
+      },
+
       disable : function() { this.formElement.find('input, textarea, select, button').attr('disabled', 'disabled') },
 
       getSubmitButton : function() { return this.submitButton },
