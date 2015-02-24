@@ -145,15 +145,15 @@
         var field = this.formElement.find('input[name="' + fieldName + '"]')
         field.on('keydown', function(e) {
           var keyCode = e.which || e.keyCode
-          var keyString = String.fromCharCode(keyCode)
 
-          // Allow number characters, special keys like ctrl and numpads.
-          if (
-            !/[0-9]/.test(keyString) && (
-              (keyCode > 46 && keyCode <= 90) ||
-              (keyCode > 145)
-            )
-          ){
+          function isAllowedKey(k) {
+            return (k <= 46 && k !== 32) || // Normal control keys except space.
+              (k >= 48 && k <= 57) ||       // Regular number keys.
+              (k >= 96 && k <= 105) ||      // Numpad keys.
+              (k >= 112 && k <= 145)        // Function keys etc.
+          }
+
+          if (!isAllowedKey(keyCode)) {
             e.preventDefault()
             e.stopPropagation()
           }
