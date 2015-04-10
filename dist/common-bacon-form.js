@@ -44,7 +44,11 @@
 
         instance.hasErrors().assign(button, "attr", "disabled")
 
-        var enterKeys = instance.keyUpStreams().filter(instance.util.ENTER_KEY).filter(instance.hasErrors().not())
+        var enterKeys = instance.keyUpStreams()
+                  .filter(function(e) { return e.currentTarget.type !== 'textarea' })
+                  .filter(instance.util.ENTER_KEY)
+                  .filter(instance.hasErrors().not())
+
         var submit = button.asEventStream('click').doAction('.preventDefault')
         var submitEvents = submit.merge(enterKeys)
 

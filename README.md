@@ -5,6 +5,7 @@ Shared custom libraries used across projects.
 
 Release notes
 =============
+0.1.7 Fixed form to not submit when pressing enter in a textarea
 0.1.6 Fixed addNumberField keycode validation to support all keyboards.
 0.1.5 Added support for radiofields.
 0.1.4 Bug fixes.
