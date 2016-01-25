@@ -255,7 +255,7 @@
       getValues : function() {
         var template = {}
         _.each(this.formFields, function(field, name) {
-          template[name] = field.value
+          _.set(template, name, field.value)
         })
 
         return Bacon.combineTemplate(template)
