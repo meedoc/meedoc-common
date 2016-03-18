@@ -307,6 +307,7 @@
         'IS_EMPTY_STRING' : function isEmpty(val) { return val === "" },
         'AUTH_CODE': function authCode(val) { return val.length === 5 },
         'MOBILE_WITH_PREFIX' : function containsCountryCode(val) { return /^(?:00|\+)[0-9\s]{6,20}$/.test(val) },
+        'MOBILE_WITH_PREFIX_OR_EMPTY' : function containsCountryCode(val) { return (val==='')?true:/^(?:00|\+)[0-9\s]{6,20}$/.test(val) },
         'MOBILE' : function containsCountryCode(val) { return /^[0-9\s]{6,20}$/.test(val) },
         'IS_TRUE' : function isTrue(bool) { return bool === true },
         'IS_FALSE' : function isFalse(bool) { return false },
