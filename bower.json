@@ -1,9 +1,9 @@
 {
   "name": "common-bacon-form",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "homepage": "https://github.com/meedoc/meedoc-common",
   "authors": [
-    "JaakkoL <jaakko.o.laurila@gmail.com>"
+    "MeeDoc <dev@meedoc.com>"
   ],
   "description": "Shared custom libraries used across projects.",
   "main": "dist/common-bacon-form.js",
