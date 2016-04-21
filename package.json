@@ -4,7 +4,7 @@
   "description": "Shared custom libraries used across projects.",
   "main": "dist/common-bacon-form.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/meedoc/meedoc-common/issues"
   },
-  "homepage": "https://github.com/meedoc/meedoc-common#readme"
+  "homepage": "https://github.com/meedoc/meedoc-common#readme",
+  "devDependencies": {
+    "mocha": "2.4.5",
+    "should": "8.3.1"
+  }
 }

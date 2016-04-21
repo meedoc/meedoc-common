@@ -296,6 +296,8 @@
         'ESC_KEY' : function enterKey(e) { return e.keyCode == 27 }
       },
 
+      //TODO: validators should be loaded from an external file in order to make
+      // easy unitary testing.
       validators : {
         'EMAIL' : function isValidEmail(email) {
           return /^[A-Za-z0-9._%\-+]+@(?:[A-Za-z0-9\-]+\.)+[A-Za-z]{2,4}$/.test(email)
@@ -312,7 +314,10 @@
         'IS_FALSE' : function isFalse(bool) { return false },
         'IS_INTEGER' : function isNumber(val) { return val >>> 0 === parseFloat(val) },
         'IS_DATE': function isDate(val) { return /^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(val)},
-        'ANYTHING': function alwaysTrue() { return true }
+        'ANYTHING': function alwaysTrue() { return true },
+        'HAS_TEXT': function hasText(val) {
+          return val.replace(/[\s\t\n\r\000\xFF\uFFFF\cI\v\0]/g, "") !== ""
+        }
       }
     }
 
