@@ -1,6 +1,6 @@
 {
   "name": "meedoc-common",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Shared custom libraries used across projects.",
   "main": "dist/common-bacon-form.js",
   "scripts": {
